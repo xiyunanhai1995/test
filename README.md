@@ -49,7 +49,7 @@ typedef struct Node
 
 将两种结构结合，即可得到完整的**快速表**结构（暂称为“快速表”吧）
 
-<p align="center"><img src="Pictures/3.png" width="50%"\></p>  
+<p align="center"><img src="Pictures/3.png" width="90%"\></p>  
 <p align="center" style="color:orange; font-size:14px; color: #999; " >图3 快速表整体结构</p>
 
 上图中，称第一个节点为头节点，key 为 head，value 储存链表长度，Lru指针指向头节点，不改变。而 L 指针则一直指向尾节点，随着 List 的增加而实时移动。
@@ -76,7 +76,7 @@ typedef struct Node
 
 > 【注】：（1）插入前需要进行 key 重复检查，已经有了就不要再插了；（2）修改节点的同时，还要同时修改链表长度值，在头节点的 value 变量中储存。
 
-<p align="center"><img src="Pictures/4.png" width="50%"\></p>
+<p align="center"><img src="Pictures/4.png" width="90%"\></p>
 <p align="center" style="color:orange; font-size:14px; color: #999; " >图4 List的插入</p>
 
 
@@ -88,7 +88,7 @@ List 中每插入一个新节点（head节点除外），哈希表也需要同�
 
 而对于哈希索引值计算，则是通过下图所示的计算过程
 
-<p align="center"><img src="Pictures/5.png" width="50%"\></p>
+<p align="center"><img src="Pictures/5.png" width="70%"\></p>
 <p align="center" style="color:orange; font-size:14px; color: #999; " >图5 哈希索引计算</p>
 
 以"rose"为例：
@@ -101,7 +101,7 @@ List 中每插入一个新节点（head节点除外），哈希表也需要同�
 
 例如如 rose 和 tom 经计算后的哈希值都为 1，但 tom 已经率先插入了，故哈希值只能往后再挪一步，不过发现 2 又和 bob 冲突了，没办法，再挪一次，发现位置 3 为 NULL，赶紧插入。
 
-<p align="center"><img src="Pictures/6.png" width="50%"\></p>
+<p align="center"><img src="Pictures/6.png" width="60%"\></p>
 <p align="center" style="color:orange; font-size:14px; color: #999; " >图6 冲突处理</p>
 
 > ### 查询问题 
@@ -133,7 +133,7 @@ while( strcmp( HashTable[hash]->key, key) )
 > 如果仅进行删除的操作，那么就有可能导致错误的查询失败发生
 
 > 接上个例子，再成功插入 rose 后，如果这时再执行一个 bob 的删除操作，则位置 2 被置 NULL。此时执行 rose 的查询操作，在经过一次冲突检查后到达位置 2 后，就会直接判定查询失败，无 rose。出现Bug。
-> <p align="center"><img src="Pictures/7.png" width="50%"\></p>
+> <p align="center"><img src="Pictures/7.png" width="60%"\></p>
 > <p align="center" style="color:orange; font-size:14px; color: #999; " >图7 查询问题</p>
 > 所以，对于这种结构的哈希表，想实现 O(1) 的查询就不能实现单一删除的操作，不过本文最开始就表明只针对 O(1) 的 set 和 get，所以该结构可以满足要求。
 
@@ -141,7 +141,7 @@ while( strcmp( HashTable[hash]->key, key) )
 
 > 那就得换哈希表的结构了，比如下面这种 链地址法，不存在上述问题。
 
-> <p align="center"><img src="Pictures/8.png" width="50%"\></p>
+> <p align="center"><img src="Pictures/8.png" width="60%"\></p>
 > <p align="center" style="color:orange; font-size:14px; color: #999; " >图8 哈希表的链地址法</p>
 
 > 但首先有会有部分内存浪费，而且链表结构也会增加查询开销...，所以具体情况还需具体分析
@@ -166,7 +166,30 @@ while( strcmp( HashTable[hash]->key, key) )
 
 第二个表，从上往下依次为哈希表的内容，0, 1, ... 5 分别指向不同的节点，即代表不同节点的哈希索引值。
 
-> <p align="center"><img src="Pictures/9.png" width="23%"\></p>
+(截图插入无法显示，可在`Pictures\9.PNG`中查看)  
+
+```
+========== List ==========  
+||  head(len: 5)  
+||    ↓↑  
+||  jack(1)  
+||    ↓↑  
+||  tom(2)  
+||    ↓↑  
+||  bob(3)  
+||    ↓↑  
+||  alice(4)  
+||    ↓↑  
+||  rose(5)  
+===========================  
+------- HashTable -------  
+||  0 → alice  
+||  1 → tom  
+||  2 → bob  
+||  3 → rose  
+||  4 → jack  
+-------------------------  
+```
 
 
 # 参考文章
